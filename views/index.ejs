@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Forum</title>
+	<link rel="stylesheet" href="CSS/styles.css">
+	<link rel="stylesheet" href="CSS/index.css">
+	<!-- Importing fonts-->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+	<header>
+		<a href="/"><h1>Simple Forum</h1></a>
+		<nav id="nav-bar">
+			<% if(!loggedIn) { %>
+				<a href="/login-page">Login</a>
+				<a href="/register-page">Sign Up</a>
+			<% } else { %>
+				<% if (admin) { %>
+					<a href="/admin-panel">Admin Panel</a>
+				<% } %>
+				<a href="/settings">Settings</a>
+				<a href="/log-out">Log Out</a>
+			<% } %>
+		</nav>
+	</header>
+	<main>
+		<div class="page-title">
+			<h2>Welcome to Simple Forums!</h2>
+			<p>Discover, Share, and Engage in Discussions!</p>
+		</div>
+		<table>
+			<% if (categories.length < 1) { %>
+				<tr>
+					<th>Sorry!</th>
+				</tr>
+				<tr>
+					<td colspan="4">No categories available!</td>
+				</tr>
+			<% } else { %>
+				<tr>
+					<th></th>
+					<th>Category</th>
+					<th>Posts</th>
+					<th>Last Post</th>
+				</tr>
+				<% categories.forEach(category => { %>
+				<tr>
+					<td>
+						<span class='material-symbols-outlined'>forum</span>
+					</td>
+					<td>
+						<div class="category">
+							<h4 class="category-title"><a href="/categories/<%= category.id %>"><%= category.title %></a></h4>
+							<p><%= category.description %></p>
+						</div>
+					</td>
+					<td>
+						<p><%= category.post_count %></p>
+					</td>
+					<td class="latest-post">
+						<% if (!category.latest_post_username) { %>
+							<p>No recent posts!</p>
+						<% } else { %>
+							<h4><%= category.latest_post_title %></h4>
+							<p>By <%= category.latest_post_username %></p>
+							<p>At <%= moment(category.latest_post_created_at).format('MMMM Do YYYY') %></p>
+						<% } %>
+					</td>
+				</tr>
+				<% }); %>
+			<% } %>
+		</table>
+	</main>
+</body>
+</html>

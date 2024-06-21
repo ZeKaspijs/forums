@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Forum</title>
+	<link rel="stylesheet" href="CSS/styles.css">
+	<link rel="stylesheet" href="CSS/panel.css">
+	<!-- Linking fonts -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script src="/ckeditor/build/ckeditor.js"></script>
+</head>
+<body>
+	<header>
+		<a href="/"><h1>Simple Forum</h1></a>
+		<nav>
+			<a href="/admin-panel">Admin Panel</a>
+			<a href="/settings">Settings</a>
+			<a href="/log-out">Log Out</a>
+		</nav>
+	</header>
+	<nav class="navbar">
+		<ul class="nav-links">
+			<li class="nav-item">
+				<p class="nav-link" onclick="toggleMenu('categories-menu')">Categories</a>
+				<ul id="categories-menu" class="sub-menu">
+					<li><p onclick="toggleMenu('new-category-popup')"><i class="material-icons">add</i>New Category</p></li>
+					<li><p onclick="toggleMenu('edit-category-popup')"><i class="material-icons">edit</i>Edit Category</p></li>
+					<li><p onclick="toggleMenu('delete-category-popup')"><i class="material-icons">delete</i>Delete Category</p></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<p class="nav-link" onclick="toggleMenu('posts-menu')">Posts</a>
+				<ul id="posts-menu" class="sub-menu">
+					<li><p onclick="toggleMenu('new-post-popup')"><i class="material-icons">add</i>New Post</p></li>
+					<li><p onclick="toggleMenu('edit-post-popup')"><i class="material-icons">edit</i>Edit Post</p></li>
+					<li><p onclick="toggleMenu('delete-post-popup')"><i class="material-icons">delete</i>Delete Post</p></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<p class="nav-link" onclick="toggleMenu('users-menu')">Users</a>
+				<ul id="users-menu" class="sub-menu">
+					<li><p onclick="toggleMenu('new-user-popup')"><i class="material-icons">add</i>New User</p></li>
+					<li><p onclick="toggleMenu('edit-user-popup')"><i class="material-icons">edit</i>Edit User</p></li>
+					<li><p onclick="toggleMenu('delete-user-popup')"><i class="material-icons">delete</i>Delete User</p></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+	<main class="main-content">
+		<div class="container">
+			<div class="header">
+				<h1>Admin Page</h1>
+			</div>
+			<p>Welcome to the admin panel. Use the side menu to manage categories, posts, and users.</p>
+		</div>
+
+		<!-- Popup for creating new category -->
+		<div id="new-category-popup" class="new-category-popup">
+			<div class="new-category-content">
+				<div class="title">
+					<h2>Create New Category</h2>
+					<span class="close-btn" onclick="toggleMenu('new-category-popup')">&times;</span>
+				</div>
+				<form id="new-category-form" action="/admin/create-category" method="post">
+					<label for="title">Title</label>
+					<input type="text" id="title" name="title" required maxlength="33" placeholder="My category">
+					<label for="description">Description</label>
+					<textarea id="description" name="description" rows="4" required maxlength="122" placeholder="This is my new category"></textarea>
+					<div class="private-box">
+						<label for="private">Public</label>
+						<input type="checkbox" id="private" name="private" checked>
+					</div>
+					<button type="submit">Create</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup for editing category -->
+		<div id="edit-category-popup" class="edit-category-popup">
+			<div class="edit-category-content">
+				<div class="title">
+					<h2>Edit Category</h2>
+					<span class="close-btn" onclick="toggleMenu('edit-category-popup')">&times;</span>
+				</div>
+				<form id="edit-category-form" action="/admin/edit-category" method="post">
+					<label for="edit-category-select">Select Category</label>
+					<select id="edit-category-select" name="category_id" required onchange="loadCategoryData(this.value)">
+						<option value="" disabled selected>Select a category</option>
+						<% categories.forEach(category => { %>
+							<option value="<%= category.id %>"><%= category.title %></option>
+						<% }); %>
+					</select>
+					<label for="edit-title">Title</label>
+					<input type="text" id="edit-title" name="title" required maxlength="33">
+					<label for="edit-description">Description</label>
+					<textarea id="edit-description" name="description" rows="4" required maxlength="122"></textarea>
+					<div class="private-box">
+						<label for="edit-private">Public</label>
+						<input type="checkbox" id="edit-private" name="private">
+					</div>
+					<button type="submit">Update</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup for deleting categories -->
+		<div id="delete-category-popup" class="delete-category-popup">
+			<div class="delete-category-content">
+				<div class="title">
+					<h2>Delete Category</h2>
+					<span class="close-btn" onclick="toggleMenu('delete-category-popup')">&times;</span>
+				</div>
+				<form id="delete-category-form" action="/admin/delete-category" method="post">
+					<select id="category" required>
+						<option value="" disabled selected>Select a category</option>
+						<% categories.forEach(category => { %>
+							<option value="<%= category.id %>"><%= category.title %></option>
+						<% }); %>
+					</select>
+					<button type="submit">Delete</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup for creating new post in a category -->
+		<div id="new-post-popup" class="new-post-popup">
+			<div class="new-post-content">
+				<div class="title">
+					<h2>Create New Post</h2>
+					<span class="close-btn" onclick="toggleMenu('new-post-popup')">&times;</span>
+				</div>
+				<form id="new-post-form" action="/admin/create-post" method="post">
+					<label for="post-title">Title</label>
+					<input type="text" id="post-title" name="title" required maxlength="33" placeholder="My post">
+					<label for="postEditor">Message</label>
+					<textarea id="postEditor" name="message"></textarea>
+					<label for="post-category-select">Select Category</label>
+					<select id="post-category-select" name="category_id" required>
+						<option value="" disabled selected>Select a category</option>
+						<% categories.forEach(category => { %>
+							<option value="<%= category.id %>"><%= category.title %></option>
+						<% }); %>
+					</select>
+					<button type="submit">Create</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup for editing post -->
+		<div id="edit-post-popup" class="edit-post-popup">
+			<div class="edit-post-content">
+				<div class="title">
+					<h2>Edit Post</h2>
+					<span class="close-btn" onclick="toggleMenu('edit-post-popup')">&times;</span>
+				</div>
+				<form id="edit-post-form">
+					<label for="edit-post-select">Select Post</label>
+					<select id="edit-post-select" name="post_id" required onchange="loadPostData(this.value)">
+						<option value="" disabled selected>Select a post</option>
+						<% posts.forEach(post => { %>
+							<option value="<%= post.id %>"><%= post.title %></option>
+						<% }); %>
+					</select>
+					<label for="edit-post-title">Title</label>
+					<input type="text" id="edit-post-title" name="title" required maxlength="33">
+					<label for="editPostEditor">Message</label>
+					<textarea id="editPostEditor" name="message"></textarea>
+					<label for="edit-post-category-select">Select Category</label>
+					<select id="edit-post-category-select" name="category_id" required>
+						<option value="" disabled selected>Select a category</option>
+						<% categories.forEach(category => { %>
+							<option value="<%= category.id %>"><%= category.title %></option>
+						<% }); %>
+					</select>
+					<button type="submit">Update</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup for deleting post -->
+		<div id="delete-post-popup" class="delete-post-popup">
+			<div class="delete-post-content">
+				<div class="title">
+					<h2>Delete Post</h2>
+					<span class="close-btn" onclick="toggleMenu('delete-post-popup')">&times;</span>
+				</div>
+				<form id="delete-post-form" action="/admin/delete-post" method="post">
+					<label for="delete-post-select">Select Post</label>
+					<select id="delete-post-select" name="post_id" required>
+						<option value="" disabled selected>Select a post</option>
+						<% posts.forEach(post => { %>
+							<option value="<%= post.id %>"><%= post.title %></option>
+						<% }); %>
+					</select>
+					<button type="submit">Delete</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Popup for creating new user -->
+		<div id="new-user-popup" class="new-user-popup">
+			<div class="new-user-content">
+				<div class="title">
+					<h2>Create New User</h2>
+					<span class="close-btn" onclick="toggleMenu('new-user-popup')">&times;</span>
+				</div>
+				<form id="new-user-form" method="post">
+					<label for="username">Username</label>
+					<input type="text" id="username" name="username" required maxlength="20">
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email" required>
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" required minlength="8">
+					<label for="role">Role</label>
+					<select id="role" name="role">
+						<option value="user">User</option>
+						<option value="admin">Admin</option>
+					</select>
+					<button type="submit">Create</button>
+				</form>
+			</div>
+		</div>
+		
+		<!-- Popup for editing user -->
+	<div id="edit-user-popup" class="edit-user-popup">
+		<div class="edit-user-content">
+			<div class="title">
+				<h2>Edit User</h2>
+				<span class="close-btn" onclick="toggleMenu('edit-user-popup')">&times;</span>
+			</div>
+			<form id="edit-user-form" action="/admin/edit-user" method="post">
+				<label for="edit-user-select">Select User</label>
+				<select id="edit-user-select" name="user_id" required onchange="loadUserData(this.value)">
+					<option value="" disabled selected>Select a user</option>
+						<% users.forEach(function(user) { %>
+							<option value="<%= user.id %>"><%= user.username %></option>
+						<% }); %>
+				</select>
+				<label for="edit-username">Username</label>
+				<input type="text" id="edit-username" name="username" required maxlength="33">
+				<label for="edit-email">Email</label>
+				<input type="email" id="edit-email" name="email" required maxlength="50">
+				<label for="edit-role">Role</label>
+				<select id="edit-role" name="role" required>
+					<option value="user">User</option>
+					<option value="admin">Admin</option>
+				</select>
+				<button type="submit">Update</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Popup for deleting categories -->
+	<div id="delete-user-popup" class="delete-user-popup">
+		<div class="delete-user-content">
+			<div class="title">
+				<h2>Delete User</h2>
+				<span class="close-btn" onclick="toggleMenu('delete-user-popup')">&times;</span>
+			</div>
+			<form id="delete-user-form" action="/admin/delete-user" method="post">
+				<select id="user" required>
+					<option value="" disabled selected>Select a user</option>
+					<% users.forEach(user => { %>
+						<option value="<%= user.id %>"><%= user.username %></option>
+					<% }); %>
+				</select>
+				<button type="submit">Delete</button>
+			</form>
+		</div>
+	</div>
+		
+	</main>
+	<script src="JS/panel.js"></script>
+</body>
+</html>

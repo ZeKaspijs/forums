@@ -1,0 +1,133 @@
+body {
+	background-image: url("/portal.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+/* Main Content */
+.content-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+}
+
+
+
+/* Post, current reply and new reply box */
+.post-box, .reply-box, .post-reply-box {
+	background-color: white;
+	width: 60%;
+	max-width: 800px;
+	padding: 20px;
+	margin: auto;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	margin-top: 20px;
+}
+
+.post-box {
+	line-height: 1.5;
+}
+
+
+
+/* Individual Post */
+.post-title {
+	font-size: 24px;
+	margin: 0;
+}
+
+.post-details {
+	font-size: 14px;
+	color: gray;
+	margin: 0;
+}
+
+.post-description {
+	margin: 15px 0;
+}
+
+
+
+/* Individual Reply */
+.reply .profile-header {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.profile-image {
+	display: block;
+	margin-right: 5px;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: #333 solid 2px;
+}
+
+.profile-header h4 {
+	margin: 6px 0;
+	font-size: 18px;
+	color: #333;
+}
+
+.profile-header p {
+	font-size: 16px;
+	color: #555;
+	margin: 6px 0;
+}
+
+.profile-header a {
+	text-decoration: none;
+	font-style: italic;
+	color: #f34c4c;
+}
+
+
+
+/*  New comment box */
+.post-reply-box .not-logged-in {
+	text-align: center;
+}
+
+.post-reply-box a {
+	color: #0056b3;
+	text-decoration: none;
+	margin: 10px 0;
+}
+
+label {
+	display: block;
+	font-size: 1.2em;
+	color: #333333;
+	margin: 10px 0;
+}
+
+button {
+	display: inline-block;
+	padding: 10px 15px;
+	margin-top: 10px;
+	border: none;
+	border-radius: 8px;
+	background-color: #808080;
+	color: white;
+	font-size: 1em;
+	transition: background-color 0.3s;
+}
+
+button:enabled {
+	background-color: #0056b3;
+	cursor: pointer;
+}
+
+button:disabled {
+	background-color: #808080;
+	cursor: default;
+}
+
+.post-reply-box {
+	margin-bottom: 20px;
+}

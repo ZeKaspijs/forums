@@ -1,0 +1,56 @@
+/* CSS for the container tag */
+.container {
+	max-width: 800px;
+	margin: 20px auto;
+	background-color: white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	border-radius: 10px;
+	line-height: 1.5;
+	font-family: Arial, sans-serif;
+}
+
+
+
+/* Sections */
+section {
+	margin: 50px 0;
+}
+
+
+
+/* Heading Styles */
+.container h1 {
+	font-size: 2em;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+.container h2 {
+	font-size: 1.5em;
+	margin: 10px 0;
+	color: #0056b3;
+}
+
+.container h3 {
+	margin: 0;
+}
+
+
+
+/* Paragraph Styles */
+.container p {
+	margin: 10px 0;
+}
+
+
+
+/* List Styles */
+.container ul, .container ol {
+	margin-bottom: 20px;
+	padding-left: 40px;
+}
+
+.container li {
+	margin-bottom: 10px;
+}

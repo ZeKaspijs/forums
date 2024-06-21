@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Forum</title>
+	<link rel="stylesheet" href="/CSS/styles.css">
+	<link rel="stylesheet" href="/CSS/index.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	<script src="/ckeditor/build/ckeditor.js"></script>
+</head>
+<body>
+	<style>
+		.new-post-popup {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+			z-index: 9999;
+			overflow-y: scroll;
+		}
+
+		.new-post-content {
+			background-color: #fefefe;
+			margin: 30vh auto;
+			padding: 20px;
+			border-radius: 5px;
+			width: 60%;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.new-post-content .title {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.close-btn {
+			color: #aaa;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close-btn:hover, .close-btn:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.new-post-popup h2 {
+			margin: 10px 0;
+		}
+
+		.new-post-popup label {
+			display: block;
+			margin: 10px 0;
+		}
+
+		.new-post-popup input {
+			width: 100%;
+			padding: 10px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			resize: none;
+		}
+
+		.new-post-popup input {
+			outline: none;
+		}
+
+		.new-post-popup button {
+			background-color: #1F2544;
+			color: white;
+			padding: 10px 20px;
+			margin-top: 10px;
+			border: none;
+			font-size: 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		.new-post-popup button:hover {
+			background-color: #0056b3;
+		}
+	</style>
+	<header>
+		<a href="/"><h1>Simple Forum</h1></a>
+		<nav>
+			<!-- Navigation links based on login status -->
+			<% if(!loggedIn) { %>
+				<a href="/login-page">Login</a>
+				<a href="/register-page">Sign Up</a>
+			<% } else { %>
+
+				<!-- Display admin panel link for admins -->
+				<% if (admin) { %>
+					<a href="/admin-panel">Admin Panel</a>
+				<% } %>
+				<a href="/settings">Settings</a>
+				<a href="/log-out">Log Out</a>
+			<% } %>
+		</nav>
+	</header>
+	<main>
+		<div class="page-title">
+			<h2><%= categoryInfo[0].title %></h2>
+			<p><%= categoryInfo[0].description %></p>
+		</div>
+
+		 <!-- Display new post button for logged-in users, who can post in the category -->
+		 <% if ((loggedIn && categoryInfo[0].can_post) || (admin && !categoryInfo[0].can_post)) { %>
+			<div class="new-post-button">
+				<button onclick="toggleMenu('new-post-popup')">New Post</button>
+			</div>
+		<% } %>
+		<table>
+			<!-- Check if there are any posts available -->
+			<% if (posts.length < 1) { %>
+				<tr>
+					<th>Sorry!</th>
+				</tr>
+				<tr>
+					<td colspan="4">No posts available!</td>
+				</tr>
+			<% } else { %>
+			<tr>
+				<th></th>
+				<th>Posts</th>
+				<th>Replies</th>
+				<th>Last Reply</th>
+			</tr>
+				<!-- Loop through posts and display relevant information -->
+				<% posts.forEach(post => { %>
+				<tr>
+					<td>
+						<span class='material-symbols-outlined'>forum</span>
+					</td>
+					<td>
+						<div class="post">
+							<h4 class="post-title"><a href="/categories/<%= categoryInfo[0].id %>/posts/<%= post.id %>"><%= post.title %></a></h4>
+							<p>By <%= post.username %></p>
+						</div>
+					</td>
+					<td>
+						<p><%= post.reply_count %></p>
+					</td>
+					<td class="latest-reply">
+						<!-- Display information about the latest reply -->
+
+						<% if (!post.latest_reply_username) { %>
+							<p>No recent replies!</p>
+						<% } else { %>
+							<h4>By <%= post.latest_reply_username %></h4>
+							<p>At <%= moment(post.latest_reply_created_at).format('MMMM Do YYYY') %></p>
+						<% } %>
+					</td>
+				</tr>
+				<% }); %>
+			<% } %>
+		</table>
+
+		<!-- Pagination -->
+		<% if (totalPages > 1) { %>
+			<div class="pagination">
+				<% if (currentPage > 1) { %>
+					<a href="/categories/<%= categoryInfo[0].id %>?page=<%= currentPage - 1 %>">Previous Page</a>
+				<% } %>
+				
+				<% if (currentPage < totalPages) { %>
+					<a href="/categories/<%= categoryInfo[0].id %>?page=<%= currentPage + 1 %>">Next Page</a>
+				<% } %>
+			</div>
+		<% } %>
+
+		<!-- New post popup -->
+		<div id="new-post-popup" class="new-post-popup">
+			<div class="new-post-content">
+				<div class="title">
+					<h2>Create New Post</h2>
+					<span class="close-btn" onclick="toggleMenu('new-post-popup')">&times;</span>
+				</div>
+				<form id="new-post-form" method="post">
+					<label for="title">Title</label>
+					<input type="text" id="title" name="title" required maxlength="33">
+					<label for="editor">Message</label>
+					<textarea id="editor" name="message"></textarea>
+					<button type="submit">Create</button>
+					<input type="hidden" id="categoryID" value="<%= categoryInfo[0].id %>"> <!-- Get categoryID for inserting posts -->
+				</form>
+			</div>
+		</div>
+	</main>
+	<script>
+		let editor;  // CKEditor 5
+
+		ClassicEditor.create(document.querySelector('#editor'), {
+			simpleUpload: {
+			 	uploadUrl: '/uploadImage' // Server-side upload handler URL
+			},
+
+			mediaEmbed: {
+				previewsInData: true // Enable previews in data
+			},
+		})
+		.then(newEditor => {
+			editor = newEditor;
+		})
+		.catch(error => {
+			console.error(error);
+		});
+
+
+
+		const form = document.getElementById('new-post-form');
+		const button = document.getElementById('submit');
+
+		// Listening for new post popup form submission
+		form.addEventListener("submit", function(event) {
+			event.preventDefault();
+
+			// Get values from form fields
+			const title = document.getElementById("title").value.trim();
+			const content = editor.getData();
+			const categoryID = document.getElementById("categoryID").value.trim();
+
+			// Check for empty fields
+			if (title === "") {
+				alert("Title cannot be empty.");
+				return;
+			}
+			if (content === "") {
+				alert("Content cannot be empty.");
+				return;
+			}
+
+			// Send data to server
+			fetch('/submit-post', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ title, content, categoryID })
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then(data => {
+				location.reload();
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				alert('An error occurred while processing your request.');
+			});
+		});
+
+
+
+		// Toggle the sidebar navigation menu
+		function toggleMenu(menuId) {
+			var menu = document.getElementById(menuId);
+			if (menu.style.display === "block") {
+				menu.style.display = "none";
+				document.body.style.overflow = "";
+			} else {
+				menu.style.display = "block";
+				document.body.style.overflow = "hidden";
+			}
+		}
+	</script>
+</body>
+</html>

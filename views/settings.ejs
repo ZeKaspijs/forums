@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Forum</title>
+	<link rel="stylesheet" href="CSS/styles.css">
+	<link rel="stylesheet" href="CSS/settings.css">
+</head>
+<body>
+	<header>
+		<a href="/"><h1>Simple Forum</h1></a>
+		<nav>
+			<% if(!loggedIn) { %>
+				<a href="/login-page">Login</a>
+				<a href="/register-page">Sign Up</a>
+			<% } else { %>
+				<% if (admin) { %>
+					<a href="/admin-panel">Admin Panel</a>
+				<% } %>
+				<a href="/settings">Settings</a>
+				<a href="/log-out">Log Out</a>
+			<% } %>
+		</nav>
+	</header>
+	<main>
+		<% user_data.forEach(user_data => { %>
+			<div class="settings-container">
+				<h2>Settings</h2>
+				<div class="profile-section">
+					<div class="profile-image" id="profile-image-container">
+						<img src="<%= user_data.image %>" id="profile-pic" alt="Profile Picture">
+						<div class="upload-overlay" id="upload-overlay">Click to Upload</div>
+						<input type="file" id="upload-input" style="display: none;">
+					</div>
+					<div class="profile-info">
+						<form id="settings-form">
+							<label for="username">Username</label>
+							<input type="text" id="username" value="<%= user_data.username %>" required>
+							<label for="email">Email</label>
+							<input type="email" id="email" value="<%= user_data.email %>" required>
+							<button type="submit">Save Changes</button>
+						</form>
+						<button id="change-password" class="change-password" onclick="toggleMenu('new-password-popup')">Change Password</a>
+					</div>
+				</div>
+			</div>
+		<% }); %>
+		
+		<div id="new-password-popup" class="new-password-popup">
+			<div class="new-password-content">
+				<div class="title">
+					<h2>Change Password</h2>
+					<span class="close-btn" onclick="toggleMenu('new-password-popup')">&times;</span>
+				</div>
+				<form id="new-password-form">
+					<label for="old-password">Old Password</label>
+					<input type="password" id="old-password" name="old-password" required>
+					<label for="new-password">New Password</label>
+					<input type="password" id="new-password" name="new-password" required minlength="8">
+					<button type="submit">Change Password</button>
+				</form>
+			</div>
+		</div>		
+	</main>
+	<script>
+		// Toggle the sidebar navigation menu
+		function toggleMenu(menuId) {
+			var menu = document.getElementById(menuId);
+			if (menu.style.display === "block") {
+				menu.style.display = "none";
+			} else {
+				menu.style.display = "block";
+			}
+		}
+	</script>
+	<script src="JS/settings.js"></script>
+</body>
+</html>

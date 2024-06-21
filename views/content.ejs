@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Forum</title>
+	<link rel="stylesheet" href="/CSS/styles.css">
+	<link rel="stylesheet" href="/CSS/content.css">
+	<script src="/ckeditor/build/ckeditor.js"></script>
+</head>
+<body>
+	<header>
+		<a href="/"><h1>Simple Forum</h1></a>
+		<nav>
+			<% if(!loggedIn) { %>
+				<a href="/login-page">Login</a>
+				<a href="/register-page">Sign Up</a>
+			<% } else { %>
+				<% if (admin) { %>
+					<a href="/admin-panel">Admin Panel</a>
+				<% } %>
+				<a href="/settings">Settings</a>
+				<a href="/log-out">Log Out</a>
+			<% } %>
+		</nav>
+	</header>
+	<main>
+		<div class="content">
+			<div class="post-box">
+				<% posts.forEach(post => { %>
+					<div class="post">
+						<h2 class="post-title"><%= post.title %></h2>
+						<p class="post-details">Posted by <%= post.username %> at <%= moment(post.created_at).format('MMMM Do HH:mm') %></p>
+						<p class="post-description"><%- post.content %></p>
+					</div>
+				<% }); %>
+			</div>
+			
+			<% if (!replies.length < 1) { %>
+				<div class="reply-box">
+					<% replies.forEach(reply => { %>
+						<div class="reply">
+							<div class="profile-header">
+								<img class="profile-image" src="/<%= reply.image %>">
+								<h4><%= reply.username %></h4>
+								<p>at <%= moment(reply.created_at).format('MMMM Do HH:mm') %></p>
+								<% if (admin) { %>
+									<a href="#" onclick="deleteReply('<%= reply.id %>')">Delete</a>
+								<% } %>
+							</div>
+							<div class="profile-content">
+								<p><%- reply.content %></p>
+							</div>							
+						</div>
+					<% }); %>
+				</div>
+			<% } %>			
+
+			<div class="post-reply-box">
+				<% if (!loggedIn) { %>
+					<div class="not-logged-in">
+						<h2>You are not logged in!</h2>
+						<p><a href="/login-page">Log In</a> or <a href="/register-page">Sign Up</a> to comment!</p>
+					</div>
+				<% } else { %>
+					<form id="reply-form">
+						<label for="editor">Your Comment</label>
+						<textarea id="editor" name="message"></textarea>
+						<button id="submit" disabled>Submit</button> <!-- Initially disabled -->
+						<input type="hidden" id="postID" value="<%= postInfo[0].id %>"> <!-- Get postID for inserting replies -->
+					</form>
+				<% } %>
+			</div>
+		</div>
+
+		<script src="/JS/content.js"></script>
+	</main>
+</body>
+</html>

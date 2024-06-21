@@ -1,0 +1,101 @@
+/* Main table styles */
+table {
+	width: 80%;
+	margin: 50px auto;
+	border-collapse: collapse;
+	background-color: #ffffff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	overflow: hidden;
+}
+
+th {
+	background-color: #1F2544;
+	color: #ffffff;
+	font-size: 1.2em;
+	text-align: left;
+}
+
+th, td {
+	padding: 15px;
+	border-bottom: 1px solid rgba(221, 221, 221, 0.5);
+}
+
+main table tr:last-child td {
+	border-bottom: none;
+}
+
+th:first-child, th:nth-child(3), th:last-child, td:first-child, td:nth-child(3) {
+	text-align: center;
+}
+
+
+
+/* Category styles and post styles */
+.category h4, .latest-post h4, .post h4, .latest-reply h4 {
+	margin: 10px 0;
+}
+
+.category p, .post p, .latest-post p, .latest-reply p {
+	margin: 10px 0;
+}
+
+.category a, .post a {
+	text-decoration: none;
+	color: #0f0f0f;
+	transition: color 0.2s;
+}
+
+.category-title a:hover, .post-title a:hover {
+	color: #0056b3;
+}
+
+
+
+/* Icon styles */
+.material-symbols-outlined {
+	font-size: 24px;
+	color: #0f0f0f;
+}
+
+.latest-post, .latest-reply {
+	text-align: center;
+}
+
+
+
+/* New post button */
+.new-post-button {
+	text-align: right;
+	width: 80%;
+	margin: 20px auto -50px;
+	position: relative;
+}
+
+.new-post-button button, .pagination a {
+	background-color: #1F2544;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background-color 0.2s;
+}
+
+.new-post-button button:hover {
+	background-color: #0056b3;
+}
+
+
+
+/* Pagination */
+.pagination {
+	text-align: center;
+	width: 80%;
+	margin: -20px auto 20px;
+	position: relative;
+}

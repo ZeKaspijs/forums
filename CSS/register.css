@@ -1,0 +1,77 @@
+body {
+	background-image: url("/forest.jpg");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.register-container {
+	max-width: 400px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: white;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.register-container h2 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.register-container label {
+	display: block;
+	margin: 10px 0;
+}
+
+.register-container input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+.register-container button {
+	width: 100%;
+	padding: 15px;
+	background-color: #1F2544;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: ease-in 0.1s;
+}
+
+.register-container button:hover {
+	background-color: #0056b3;
+}
+
+.terms, .existing-user {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.existing-user {
+	justify-content: center;
+}
+
+.terms input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+	margin-left: 0;
+	vertical-align: middle;
+}
+
+.terms label, .existing-user p {
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.terms a, .existing-user a {
+	color: #007BFF;
+	text-decoration: none;
+}

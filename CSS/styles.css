@@ -1,0 +1,81 @@
+/* Set basic styles */
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	color: #333;
+}
+
+.page-title {
+	height: 50vh;
+	width: auto;
+	background-image: url("/portal.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	font-size: 25px;
+	color: white;
+}
+
+.page-title h2, p {
+	margin: 10px 0;
+}
+
+
+
+/* Header styles */
+header {
+	background-color: #1F2544;
+	color: white;
+	padding: 20px 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	text-decoration: none;
+}
+
+header a {
+	text-decoration: none;
+}
+
+header h1 {
+	font-size: 1.5em;
+	color: white;
+}
+
+header nav a {
+	text-decoration: none;
+	color: white;
+	margin-left: 15px;
+	text-transform: uppercase;
+}
+
+
+
+/* Inline CSS for the slide-in animation */
+.error {
+	color: white;
+	visibility: hidden;
+	position: relative;
+	text-align: center;
+	transform: translateY(-100%);
+	transition: ease-in 0.5s;
+	opacity: 0;
+	list-style: none;
+	background-color: #DD5746;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	line-height: 1.5;
+}
+
+.error.slide-in {
+	visibility: visible; /* Ensure element is visible */
+	transform: translateY(0);
+	padding: 15px;
+	opacity: 1;
+}
